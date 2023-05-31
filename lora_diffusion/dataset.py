@@ -11,7 +11,7 @@ from .preprocess_files import face_mask_google_mediapipe
 
 FACE_PORTRAIT_TEMPLATE = [
     "{}, headshot",
-    "headshot of {}, looking at the viewer"
+    "headshot of {}, looking at the viewer",
     "a headshot photo of {}",
     "a close portrait of {}",
     "a candid photo of {}",
