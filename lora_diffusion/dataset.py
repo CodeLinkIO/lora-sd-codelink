@@ -9,6 +9,20 @@ from torchvision import transforms
 import glob
 from .preprocess_files import face_mask_google_mediapipe
 
+FACE_PORTRAIT_TEMPLATE = [
+    "{}, headshot",
+    "headshot of {}, looking at the viewer"
+    "a headshot photo of {}",
+    "a close portrait of {}",
+    "a candid photo of {}",
+    "a closeup portrait of {}",
+    "a selfie photo of {}",
+    "a selfie portrait of {}",
+    "a close-up selfie of {}, shoulders up",
+    "a candid headshot selfie of {}",
+    "a close-up portrait of {}, looking at the camera",
+]
+
 OBJECT_TEMPLATE = [
     "a photo of a {}",
     "a rendering of a {}",
@@ -64,6 +78,7 @@ STYLE_TEMPLATE = [
 NULL_TEMPLATE = ["{}"]
 
 TEMPLATE_MAP = {
+    "face": FACE_PORTRAIT_TEMPLATE,
     "object": OBJECT_TEMPLATE,
     "style": STYLE_TEMPLATE,
     "null": NULL_TEMPLATE,
