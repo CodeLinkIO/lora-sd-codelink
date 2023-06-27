@@ -10,17 +10,17 @@ import glob
 from .preprocess_files import face_mask_google_mediapipe
 
 FACE_PORTRAIT_TEMPLATE = [
-    "{}, headshot",
-    "headshot of {}, looking at the viewer",
-    "a headshot photo of {}",
-    "a close portrait of {}",
-    "a candid photo of {}",
-    "a closeup portrait of {}",
-    "a selfie photo of {}",
-    "a selfie portrait of {}",
-    "a close-up selfie of {}, shoulders up",
-    "a candid headshot selfie of {}",
-    "a close-up portrait of {}, looking at the camera",
+    "{} person, headshot photo",
+    "headshot portrait of {} person, looking at the viewer",
+    "a headshot photo of {} person",
+    "a close portrait of {} person",
+    "a candid photo of {} person",
+    "a closeup portrait of {} person",
+    "a selfie photo of {} person",
+    "a selfie portrait of {} human",
+    "a close-up selfie of {} human, shoulders up",
+    "a candid headshot selfie of {} human",
+    "a close-up portrait of {} person, looking at the camera",
 ]
 
 OBJECT_TEMPLATE = [
