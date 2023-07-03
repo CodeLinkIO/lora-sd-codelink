@@ -143,6 +143,7 @@ class PivotalTuningDatasetCapation(Dataset):
         tokenizer,
         token_map: Optional[dict] = None,
         use_template: Optional[str] = None,
+        custom_templates: Optional[list[str]] = None,
         size=512,
         h_flip=True,
         color_jitter=False,
@@ -244,7 +245,9 @@ class PivotalTuningDatasetCapation(Dataset):
         self.token_map = token_map
 
         self.use_template = use_template
-        if use_template is not None:
+        if custom_templates is not None:
+            self.templates = custom_templates
+        elif use_template is not None:
             self.templates = TEMPLATE_MAP[use_template]
 
         self._length = self.num_instance_images

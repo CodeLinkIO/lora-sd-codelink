@@ -749,6 +749,7 @@ def train(
     proxy_token: str = "person",
     enable_xformers_memory_efficient_attention: bool = False,
     out_name: str = "final_lora",
+    custom_templates: list[str] = None,
 ):
     torch.manual_seed(seed)
 
@@ -842,6 +843,7 @@ def train(
         instance_data_root=instance_data_dir,
         token_map=token_map,
         use_template=use_template,
+        custom_templates=custom_templates,
         tokenizer=tokenizer,
         size=resolution,
         color_jitter=color_jitter,
