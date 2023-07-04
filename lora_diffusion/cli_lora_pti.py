@@ -816,6 +816,7 @@ def train(
         revision,
         placeholder_tokens,
         initializer_tokens,
+        mixed_precision=mixed_precision,
         device=device,
     )
 
