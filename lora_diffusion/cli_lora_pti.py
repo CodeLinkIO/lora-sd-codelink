@@ -52,6 +52,7 @@ def get_models(
     revision,
     placeholder_tokens: List[str],
     initializer_tokens: List[str],
+    mixed_precision: bool,
     device="cuda:0",
 ):
 
@@ -59,12 +60,14 @@ def get_models(
         pretrained_model_name_or_path,
         subfolder="tokenizer",
         revision=revision,
+        torch_dtype= torch.float16 if mixed_precision  else "auto",
     )
 
     text_encoder = CLIPTextModel.from_pretrained(
         pretrained_model_name_or_path,
         subfolder="text_encoder",
         revision=revision,
+        torch_dtype= torch.float16 if mixed_precision  else "auto",
     )
 
     placeholder_token_ids = []
@@ -112,11 +115,15 @@ def get_models(
         pretrained_vae_name_or_path or pretrained_model_name_or_path,
         subfolder=None if pretrained_vae_name_or_path else "vae",
         revision=None if pretrained_vae_name_or_path else revision,
+        torch_dtype= torch.float16 if mixed_precision  else "auto",
+
+        
     )
     unet = UNet2DConditionModel.from_pretrained(
         pretrained_model_name_or_path,
         subfolder="unet",
         revision=revision,
+        torch_dtype= torch.float16 if mixed_precision  else "auto",
     )
 
     return (
@@ -750,6 +757,7 @@ def train(
     enable_xformers_memory_efficient_attention: bool = False,
     out_name: str = "final_lora",
     custom_templates: list[str] = None,
+    mixed_precision: bool = False,
 ):
     torch.manual_seed(seed)
 
@@ -926,7 +934,7 @@ def train(
             wandb_log_prompt_cnt=wandb_log_prompt_cnt,
             class_token=class_token,
             train_inpainting=train_inpainting,
-            mixed_precision=False,
+            mixed_precision=mixed_precision,
             tokenizer=tokenizer,
             clip_ti_decay=clip_ti_decay,
         )

@@ -1061,10 +1061,10 @@ def save_all(
             learned_embeds_dict = {}
             for tok, tok_id in zip(placeholder_tokens, placeholder_token_ids):
                 learned_embeds = text_encoder.get_input_embeddings().weight[tok_id]
-                print(
-                    f"Current Learned Embeddings for {tok}:, id {tok_id} ",
-                    learned_embeds[:4],
-                )
+                # print(
+                #     f"Current Learned Embeddings for {tok}:, id {tok_id} ",
+                #     learned_embeds[:4],
+                # )
                 learned_embeds_dict[tok] = learned_embeds.detach().cpu()
 
             torch.save(learned_embeds_dict, ti_path)
@@ -1101,10 +1101,10 @@ def save_all(
         if save_ti:
             for tok, tok_id in zip(placeholder_tokens, placeholder_token_ids):
                 learned_embeds = text_encoder.get_input_embeddings().weight[tok_id]
-                print(
-                    f"Current Learned Embeddings for {tok}:, id {tok_id} ",
-                    learned_embeds[:4],
-                )
+                # print(
+                #     f"Current Learned Embeddings for {tok}:, id {tok_id} ",
+                #     learned_embeds[:4],
+                # )
                 embeds[tok] = learned_embeds.detach().cpu()
 
         save_safeloras_with_embeds(loras, embeds, save_path)
