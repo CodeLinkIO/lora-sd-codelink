@@ -435,13 +435,13 @@ def train_inversion(
                 loss_sum += loss.detach().item()
 
                 if global_step % accum_iter == 0:
-                    # print gradient of text encoder embedding
-                    print(
-                        text_encoder.get_input_embeddings()
-                        .weight.grad[index_updates, :]
-                        .norm(dim=-1)
-                        .mean()
-                    )
+                    # # print gradient of text encoder embedding
+                    # print(
+                    #     text_encoder.get_input_embeddings()
+                    #     .weight.grad[index_updates, :]
+                    #     .norm(dim=-1)
+                    #     .mean()
+                    # )
                     optimizer.step()
                     optimizer.zero_grad()
 
@@ -466,7 +466,7 @@ def train_inversion(
                             ) * (
                                 pre_norm + lambda_ * (0.4 - pre_norm)
                             )
-                            print(pre_norm)
+                           #print(pre_norm)
 
                         current_norm = (
                             text_encoder.get_input_embeddings()
@@ -478,7 +478,7 @@ def train_inversion(
                             index_no_updates
                         ] = orig_embeds_params[index_no_updates]
 
-                        print(f"Current Norm : {current_norm}")
+                        #print(f"Current Norm : {current_norm}")
 
                 global_step += 1
                 progress_bar.update(1)
@@ -634,7 +634,7 @@ def perform_tuning(
                     .item()
                 )
 
-                print("LORA Unet Moved", moved)
+                #print("LORA Unet Moved", moved)
                 moved = (
                     torch.tensor(
                         list(itertools.chain(*inspect_lora(text_encoder).values()))
@@ -643,7 +643,7 @@ def perform_tuning(
                     .item()
                 )
 
-                print("LORA CLIP Moved", moved)
+                #print("LORA CLIP Moved", moved)
 
                 if log_wandb:
                     with torch.no_grad():
@@ -749,6 +749,7 @@ def train(
     proxy_token: str = "person",
     enable_xformers_memory_efficient_attention: bool = False,
     out_name: str = "final_lora",
+    custom_templates: list[str] = None,
 ):
     torch.manual_seed(seed)
 
@@ -765,7 +766,7 @@ def train(
 
     if output_dir is not None:
         os.makedirs(output_dir, exist_ok=True)
-    # print(placeholder_tokens, initializer_tokens)
+    #print(placeholder_tokens, initializer_tokens)
     if len(placeholder_tokens) == 0:
         placeholder_tokens = []
         print("PTI : Placeholder Tokens not given, using null token")
@@ -842,6 +843,7 @@ def train(
         instance_data_root=instance_data_dir,
         token_map=token_map,
         use_template=use_template,
+        custom_templates=custom_templates,
         tokenizer=tokenizer,
         size=resolution,
         color_jitter=color_jitter,
