@@ -10,6 +10,7 @@ import numpy as np
 import fire
 from tqdm import tqdm
 import glob
+import mediapipe as mp
 from transformers import CLIPSegProcessor, CLIPSegForImageSegmentation
 
 
@@ -203,7 +204,6 @@ def face_mask_google_mediapipe(
 
 def face_detection(img):
 
-    import mediapipe as mp
     import pandas as pd
 
     mp_face_mesh = mp.solutions.face_mesh
