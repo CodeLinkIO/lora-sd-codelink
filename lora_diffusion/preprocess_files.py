@@ -206,7 +206,7 @@ def face_detection(img):
     import mediapipe as mp
     import pandas as pd
 
-    mp_face_mesh = mediapipe.solutions.face_mesh
+    mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)
     results = face_mesh.process(img[:,:,::-1])
     landmarks = results.multi_face_landmarks[0]
