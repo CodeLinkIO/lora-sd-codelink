@@ -18,6 +18,7 @@ import torch.optim as optim
 import torch.utils.checkpoint
 from diffusers import (
     AutoencoderKL,
+    EulerAncestralDiscreteScheduler,
     DDPMScheduler,
     StableDiffusionPipeline,
     UNet2DConditionModel,
@@ -750,6 +751,8 @@ def train(
     enable_xformers_memory_efficient_attention: bool = False,
     out_name: str = "final_lora",
     custom_templates: list[str] = None,
+    noise_adder = None,
+    mixed_precision = True,
 ):
     torch.manual_seed(seed)
 
@@ -811,9 +814,14 @@ def train(
         device=device,
     )
 
-    noise_scheduler = DDPMScheduler.from_config(
-        pretrained_model_name_or_path, subfolder="scheduler"
-    )
+    if noise_adder == None:
+      noise_scheduler = DDPMScheduler.from_config(
+          pretrained_model_name_or_path, subfolder="scheduler"
+      )
+    else:
+        noise_scheduler = noise_adder.from_config(
+          pretrained_model_name_or_path, subfolder="scheduler"
+      )
 
     if gradient_checkpointing:
         unet.enable_gradient_checkpointing()
@@ -926,7 +934,7 @@ def train(
             wandb_log_prompt_cnt=wandb_log_prompt_cnt,
             class_token=class_token,
             train_inpainting=train_inpainting,
-            mixed_precision=False,
+            mixed_precision=mixed_precision,
             tokenizer=tokenizer,
             clip_ti_decay=clip_ti_decay,
         )
@@ -1036,7 +1044,6 @@ def train(
         class_token=class_token,
         train_inpainting=train_inpainting,
     )
-
 
 def main():
     fire.Fire(train)
