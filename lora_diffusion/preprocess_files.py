@@ -169,8 +169,13 @@ def face_mask_google_mediapipe(
     for image in tqdm(images):
 
         image = np.array(image)
-        routes = face_detection(image)
-        black_image = Image.fromarray(create_mask(routes, image))
+        if routes:
+            routes = face_detection(image)
+            black_image = Image.fromarray(create_mask(routes, image))
+        else:
+            black_image = np.ones((image.shape[0], image.shape[1]), dtype=np.uint8)
+            black_image = Image.fromarray(black_image)
+
         masks.append(black_image)
 
     #     results = face_detection.process(image)
@@ -209,34 +214,35 @@ def face_detection(img):
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)
     results = face_mesh.process(img[:,:,::-1])
-    landmarks = results.multi_face_landmarks[0]
-    face_oval = mp_face_mesh.FACEMESH_FACE_OVAL
-    df = pd.DataFrame(list(face_oval), columns = ["p1", "p2"])
+    if results.multi_face_landmarks:
+        landmarks = results.multi_face_landmarks[0]
+        face_oval = mp_face_mesh.FACEMESH_FACE_OVAL
+        df = pd.DataFrame(list(face_oval), columns = ["p1", "p2"])
 
-    routes_idx = []
+        routes_idx = []
 
-    p1 = df.iloc[0]["p1"]
-    p2 = df.iloc[0]["p2"]
+        p1 = df.iloc[0]["p1"]
+        p2 = df.iloc[0]["p2"]
 
-    for i in range(0, df.shape[0]):
-      obj = df[df["p1"] == p2]
-      p1 = obj["p1"].values[0]
-      p2 = obj["p2"].values[0]
+        for i in range(0, df.shape[0]):
+            obj = df[df["p1"] == p2]
+            p1 = obj["p1"].values[0]
+            p2 = obj["p2"].values[0]
 
-      current_route = []
-      current_route.append(p1)
-      current_route.append(p2)
-      routes_idx.append(current_route)
-      routes = []
-    for source_idx, target_idx in routes_idx:
-      source = landmarks.landmark[source_idx]
-      target = landmarks.landmark[target_idx]
+            current_route = []
+            current_route.append(p1)
+            current_route.append(p2)
+            routes_idx.append(current_route)
+            routes = []
+        for source_idx, target_idx in routes_idx:
+            source = landmarks.landmark[source_idx]
+            target = landmarks.landmark[target_idx]
 
-      relative_source = (int(source.x * img.shape[1]), int(source.y * img.shape[0]))
-      relative_target = (int(target.x * img.shape[1]), int(target.y * img.shape[0]))
+            relative_source = (int(source.x * img.shape[1]), int(source.y * img.shape[0]))
+            relative_target = (int(target.x * img.shape[1]), int(target.y * img.shape[0]))
 
-      routes.append(relative_source)
-      routes.append(relative_target)
+            routes.append(relative_source)
+            routes.append(relative_target)
     
     return routes
 
