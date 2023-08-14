@@ -169,8 +169,8 @@ def face_mask_google_mediapipe(
     for image in tqdm(images):
 
         image = np.array(image)
+        routes = face_detection(image)
         if routes:
-            routes = face_detection(image)
             black_image = Image.fromarray(create_mask(routes, image))
         else:
             black_image = np.ones((image.shape[0], image.shape[1]), dtype=np.uint8)
@@ -214,6 +214,7 @@ def face_detection(img):
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)
     results = face_mesh.process(img[:,:,::-1])
+    routes = []
     if results.multi_face_landmarks:
         landmarks = results.multi_face_landmarks[0]
         face_oval = mp_face_mesh.FACEMESH_FACE_OVAL
